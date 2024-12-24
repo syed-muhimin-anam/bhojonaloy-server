@@ -37,6 +37,12 @@ async function run() {
     const foodCollections = client.db('restaurant').collection('foods');
     
 
+    // post food item
+    app.post('/foods', async (req, res) => {
+      const foodData = req.body;
+      const result = await foodCollections.insertOne(foodData);
+      res.send(result);
+    })
 
     // get top foods *****************************************************
     app.get('/foods', async(req, res) => {
@@ -44,7 +50,7 @@ async function run() {
         const result  = await cursor.toArray();
         res.send(result);
     })
-    // get top foods *****************************************************
+    // get all foods *****************************************************
     app.get('/allFoods', async(req, res) => {
         const cursor = foodCollections.find();
         const result  = await cursor.toArray();
@@ -68,7 +74,6 @@ const purchaseCollection = client.db('restaurant').collection('purchase');
 app.post('/purchase', async(req, res) => {
   const purchaseInfo = req.body;
   const result = await purchaseCollection.insertOne(purchaseInfo);
-  
   res.send(result);
 })
 // get  purchase data  by user email
