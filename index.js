@@ -35,7 +35,7 @@ async function run() {
 
     // db where stored data ###################################################################
     const foodCollections = client.db('restaurant').collection('foods');
-    
+
 
     // post food item
     app.post('/foods', async (req, res) => {
@@ -45,16 +45,16 @@ async function run() {
     })
 
     // get top foods *****************************************************
-    app.get('/foods', async(req, res) => {
-        const cursor = foodCollections.find().sort({ purchase: -1 }).limit(6);
-        const result  = await cursor.toArray();
-        res.send(result);
+    app.get('/foods', async (req, res) => {
+      const cursor = foodCollections.find().sort({ purchase: -1 }).limit(6);
+      const result = await cursor.toArray();
+      res.send(result);
     })
     // get all foods *****************************************************
-    app.get('/allFoods', async(req, res) => {
-        const cursor = foodCollections.find();
-        const result  = await cursor.toArray();
-        res.send(result);
+    app.get('/allFoods', async (req, res) => {
+      const cursor = foodCollections.find();
+      const result = await cursor.toArray();
+      res.send(result);
     })
 
     // get specific food by id 
@@ -66,33 +66,41 @@ async function run() {
       res.send(result);
     })
 
+    
+    app.get('/myFoods', async (req, res) => {
+      const email = req.query.email; // Extract email from query parameters
+      const query = { "addedBy.email": email }; // Query to match addedBy.email
+      const result = await foodCollections.find(query).toArray(); // Execute query
+      res.send(result); // Return the result
+    });
+    
 
 
-// purchase ##########################################################################################
-const purchaseCollection = client.db('restaurant').collection('purchase');
-// post purchase data to the db 
-app.post('/purchase', async(req, res) => {
-  const purchaseInfo = req.body;
-  const result = await purchaseCollection.insertOne(purchaseInfo);
-  res.send(result);
-})
-// get  purchase data  by user email
-app.get('/purchase', async(req, res ) => {
-  const email = req.query.email;
-  const query = { "purchaseBy.email": email };
-  const result  = await purchaseCollection.find(query).toArray();
-  for(const food of result){
-    console.log(food.food_id);
-    const queryFood = {_id: new ObjectId(food.food_id)}
-    const foodFind = await foodCollections.findOne(queryFood)
-    if (foodFind) {
-      
-      food.foodImage = foodFind.foodImage;
-      food.foodOrigin = foodFind.foodOrigin;
-    }
-  }
-  res.send(result);
-})
+    // purchase ##########################################################################################
+    const purchaseCollection = client.db('restaurant').collection('purchase');
+    // post purchase data to the db 
+    app.post('/purchase', async (req, res) => {
+      const purchaseInfo = req.body;
+      const result = await purchaseCollection.insertOne(purchaseInfo);
+      res.send(result);
+    })
+    // get  purchase data  by user email
+    app.get('/purchase', async (req, res) => {
+      const email = req.query.email;
+      const query = { "purchaseBy.email": email };
+      const result = await purchaseCollection.find(query).toArray();
+      for (const food of result) {
+        console.log(food.food_id);
+        const queryFood = { _id: new ObjectId(food.food_id) }
+        const foodFind = await foodCollections.findOne(queryFood)
+        if (foodFind) {
+
+          food.foodImage = foodFind.foodImage;
+          food.foodOrigin = foodFind.foodOrigin;
+        }
+      }
+      res.send(result);
+    })
 
 
 
@@ -115,8 +123,8 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('welcome to bhojonaloy web server')
+  res.send('welcome to bhojonaloy web server')
 });
 app.listen(port, () => {
-    console.log(`server is running on port: ${port}`)
+  console.log(`server is running on port: ${port}`)
 })
