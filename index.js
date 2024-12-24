@@ -56,18 +56,30 @@ async function run() {
 
 
 
-// purchase 
+// purchase ##########################################################################################
 const purchaseCollection = client.db('restaurant').collection('purchase');
 // post purchase data to the db 
 app.post('/purchase', async(req, res) => {
   const purchaseInfo = req.body;
   const result = await purchaseCollection.insertOne(purchaseInfo);
+  
   res.send(result);
 })
-// get all purchase data 
+// get  purchase data  by user email
 app.get('/purchase', async(req, res ) => {
-  const cursor = purchaseCollection.find();
-  const result  = await cursor.toArray();
+  const email = req.query.email;
+  const query = { "purchaseBy.email": email };
+  const result  = await purchaseCollection.find(query).toArray();
+  for(const food of result){
+    console.log(food.food_id);
+    const queryFood = {_id: new ObjectId(food.food_id)}
+    const foodFind = await foodCollections.findOne(queryFood)
+    if (foodFind) {
+      
+      food.foodImage = foodFind.foodImage;
+      food.foodOrigin = foodFind.foodOrigin;
+    }
+  }
   res.send(result);
 })
 
