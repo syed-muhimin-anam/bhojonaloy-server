@@ -35,6 +35,7 @@ async function run() {
 
     // db where stored data ###################################################################
     const foodCollections = client.db('restaurant').collection('foods');
+    
 
 
     // get all foods *****************************************************
@@ -55,7 +56,20 @@ async function run() {
 
 
 
-
+// purchase 
+const purchaseCollection = client.db('restaurant').collection('purchase');
+// post purchase data to the db 
+app.post('/purchase', async(req, res) => {
+  const purchaseInfo = req.body;
+  const result = await purchaseCollection.insertOne(purchaseInfo);
+  res.send(result);
+})
+// get all purchase data 
+app.get('/purchase', async(req, res ) => {
+  const cursor = purchaseCollection.find();
+  const result  = await cursor.toArray();
+  res.send(result);
+})
 
 
 
