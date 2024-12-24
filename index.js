@@ -33,6 +33,16 @@ async function run() {
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
+    // db where stored data ###################################################################
+    const foodCollections = client.db('restaurant').collection('foods');
+
+
+    // get all foods *****************************************************
+    app.get('/foods', async(req, res) => {
+        const cursor = foodCollections.find().sort({ purchase: -1 }).limit(6);
+        const result  = await cursor.toArray();
+        res.send(result);
+    })
 
 
 
