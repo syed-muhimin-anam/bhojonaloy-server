@@ -38,9 +38,15 @@ async function run() {
     
 
 
-    // get all foods *****************************************************
+    // get top foods *****************************************************
     app.get('/foods', async(req, res) => {
         const cursor = foodCollections.find().sort({ purchase: -1 }).limit(6);
+        const result  = await cursor.toArray();
+        res.send(result);
+    })
+    // get top foods *****************************************************
+    app.get('/allFoods', async(req, res) => {
+        const cursor = foodCollections.find();
         const result  = await cursor.toArray();
         res.send(result);
     })
