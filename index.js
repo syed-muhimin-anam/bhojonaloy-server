@@ -79,7 +79,7 @@ async function run() {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
-      const updatePurchase = req.body; // Expecting { purchase: <number> }
+      const updatePurchase = req.body; 
   
       const food = {
           $set: {
@@ -112,6 +112,14 @@ app.patch('/allFoods/:id', async (req, res) => {
   res.send(result);
 });
 
+// delete food 
+app.delete('/allFoods/:id', async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await foodCollections.deleteOne(query);
+  res.send(result)
+})
+
   
 
     
@@ -142,6 +150,29 @@ app.patch('/allFoods/:id', async (req, res) => {
       res.send(result);
     })
 
+
+    // get all purchase data 
+    app.get('/allPurchase', async (req, res) => {
+      const cursor = purchaseCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    // get purchase data by id 
+    app.get('/allPurchase/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await purchaseCollection.findOne(query);
+      res.send(result);
+    })
+
+    // delete purchase 
+    app.delete('/allPurchase/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await purchaseCollection.deleteOne(query);
+      res.send(result)
+    })
 
 
 
