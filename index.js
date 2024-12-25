@@ -90,6 +90,28 @@ async function run() {
       const result = await foodCollections.updateOne(filter, food, options);
       res.send(result);
   });
+
+
+// update food
+app.patch('/allFoods/:id', async (req, res) => {
+  const id = req.params.id;
+  const updateFood = req.body;
+  const filter = { _id: new ObjectId(id) };
+  const updateFoodDoc = {
+      $set: {
+          foodName: updateFood.foodName,
+          foodImage: updateFood.foodImage,
+          foodCategory: updateFood.foodCategory,
+          quantity: updateFood.quantity,
+          price: updateFood.price,
+          foodOrigin: updateFood.foodOrigin,
+          description: updateFood.description,
+      },
+  };
+  const result = await foodCollections.updateOne(filter, updateFoodDoc);
+  res.send(result);
+});
+
   
 
     
