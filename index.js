@@ -59,7 +59,7 @@ async function run() {
 
     // get specific food by id 
 
-    app.get('/foods/:id', async (req, res) => {
+    app.get('/allFoods/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) }
       const result = await foodCollections.findOne(query);
@@ -73,6 +73,25 @@ async function run() {
       const result = await foodCollections.find(query).toArray(); 
       res.send(result); 
     });
+    
+
+    app.put('/allFoods/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatePurchase = req.body; // Expecting { purchase: <number> }
+  
+      const food = {
+          $set: {
+              purchase: updatePurchase.purchase,
+          },
+      };
+  
+      const result = await foodCollections.updateOne(filter, food, options);
+      res.send(result);
+  });
+  
+
     
 
 
@@ -90,7 +109,6 @@ async function run() {
       const query = { "purchaseBy.email": email };
       const result = await purchaseCollection.find(query).toArray();
       for (const food of result) {
-        console.log(food.food_id);
         const queryFood = { _id: new ObjectId(food.food_id) }
         const foodFind = await foodCollections.findOne(queryFood)
         if (foodFind) {
