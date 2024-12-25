@@ -68,10 +68,10 @@ async function run() {
 
     
     app.get('/myFoods', async (req, res) => {
-      const email = req.query.email; // Extract email from query parameters
-      const query = { "addedBy.email": email }; // Query to match addedBy.email
-      const result = await foodCollections.find(query).toArray(); // Execute query
-      res.send(result); // Return the result
+      const email = req.query.email; 
+      const query = { "addedBy.email": email }; 
+      const result = await foodCollections.find(query).toArray(); 
+      res.send(result); 
     });
     
 
