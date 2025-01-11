@@ -90,7 +90,7 @@ async function run() {
 
     // get top foods *****************************************************
     app.get('/foods', async (req, res) => {
-      const cursor = foodCollections.find().sort({ purchase: -1 }).limit(6);
+      const cursor = foodCollections.find().sort({ purchase: -1 }).limit(4);
       const result = await cursor.toArray();
       res.send(result);
     })
