@@ -81,12 +81,8 @@ async function run() {
     })
 
 
-    // post food item
-    app.post('/foods', async (req, res) => {
-      const foodData = req.body;
-      const result = await foodCollections.insertOne(foodData);
-      res.send(result);
-    })
+
+
 
     // get top foods *****************************************************
     app.get('/foods', async (req, res) => {
